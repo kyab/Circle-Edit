@@ -1,6 +1,6 @@
 //
 //  ViewController.m
-//  Dolphin Editor
+//  Circle Edit
 //
 //  Created by kyab on 2017/04/12.
 //  Copyright © 2017年 kyab. All rights reserved.
@@ -14,6 +14,11 @@
     [super viewDidLoad];
 
     // Do any additional setup after loading the view.
+}
+
+- (void)awakeFromNib{
+    NSLog(@"ViewController awaken");
+    
 }
 
 

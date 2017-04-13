@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EB9D55B81E9FBD340059360F /* MainView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB9D55B71E9FBD340059360F /* MainView.m */; };
 		EBEC51021E9E2BA7003960D8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EBEC51011E9E2BA7003960D8 /* AppDelegate.m */; };
 		EBEC51051E9E2BA7003960D8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = EBEC51041E9E2BA7003960D8 /* main.m */; };
 		EBEC51081E9E2BA7003960D8 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBEC51071E9E2BA7003960D8 /* ViewController.m */; };
@@ -15,6 +16,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		EB9D55B61E9FBD340059360F /* MainView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainView.h; sourceTree = "<group>"; };
+		EB9D55B71E9FBD340059360F /* MainView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainView.m; sourceTree = "<group>"; };
 		EBEC50FD1E9E2BA7003960D8 /* Circle Edit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Circle Edit.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBEC51001E9E2BA7003960D8 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		EBEC51011E9E2BA7003960D8 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -63,6 +66,8 @@
 				EBEC51091E9E2BA7003960D8 /* Assets.xcassets */,
 				EBEC510E1E9E2BA7003960D8 /* Info.plist */,
 				EBEC51141E9E2D06003960D8 /* MainMenu.xib */,
+				EB9D55B61E9FBD340059360F /* MainView.h */,
+				EB9D55B71E9FBD340059360F /* MainView.m */,
 				EBEC51031E9E2BA7003960D8 /* Supporting Files */,
 			);
 			path = "Circle Edit";
@@ -147,6 +152,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				EBEC51081E9E2BA7003960D8 /* ViewController.m in Sources */,
+				EB9D55B81E9FBD340059360F /* MainView.m in Sources */,
 				EBEC51051E9E2BA7003960D8 /* main.m in Sources */,
 				EBEC51021E9E2BA7003960D8 /* AppDelegate.m in Sources */,
 			);

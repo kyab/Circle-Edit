@@ -8,9 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		EB9D55B81E9FBD340059360F /* MainView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB9D55B71E9FBD340059360F /* MainView.m */; };
+		EBA1D0071EB073F400624988 /* NSColor+CoolEdit.m in Sources */ = {isa = PBXBuildFile; fileRef = EBA1D0061EB073F400624988 /* NSColor+CoolEdit.m */; };
+		EBBB3C4F1EA3B35000017D02 /* WaveView.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBB3C4E1EA3B35000017D02 /* WaveView.m */; };
 		EBEC51021E9E2BA7003960D8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EBEC51011E9E2BA7003960D8 /* AppDelegate.m */; };
 		EBEC51051E9E2BA7003960D8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = EBEC51041E9E2BA7003960D8 /* main.m */; };
-		EBEC51081E9E2BA7003960D8 /* ViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBEC51071E9E2BA7003960D8 /* ViewController.m */; };
+		EBEC51081E9E2BA7003960D8 /* AppController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBEC51071E9E2BA7003960D8 /* AppController.m */; };
 		EBEC510A1E9E2BA7003960D8 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = EBEC51091E9E2BA7003960D8 /* Assets.xcassets */; };
 		EBEC51151E9E2D06003960D8 /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = EBEC51141E9E2D06003960D8 /* MainMenu.xib */; };
 /* End PBXBuildFile section */
@@ -18,12 +20,16 @@
 /* Begin PBXFileReference section */
 		EB9D55B61E9FBD340059360F /* MainView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainView.h; sourceTree = "<group>"; };
 		EB9D55B71E9FBD340059360F /* MainView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainView.m; sourceTree = "<group>"; };
+		EBA1D0051EB073F400624988 /* NSColor+CoolEdit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSColor+CoolEdit.h"; sourceTree = "<group>"; };
+		EBA1D0061EB073F400624988 /* NSColor+CoolEdit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSColor+CoolEdit.m"; sourceTree = "<group>"; };
+		EBBB3C4D1EA3B35000017D02 /* WaveView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WaveView.h; sourceTree = "<group>"; };
+		EBBB3C4E1EA3B35000017D02 /* WaveView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WaveView.m; sourceTree = "<group>"; };
 		EBEC50FD1E9E2BA7003960D8 /* Circle Edit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Circle Edit.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBEC51001E9E2BA7003960D8 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		EBEC51011E9E2BA7003960D8 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
 		EBEC51041E9E2BA7003960D8 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		EBEC51061E9E2BA7003960D8 /* ViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = ViewController.h; sourceTree = "<group>"; };
-		EBEC51071E9E2BA7003960D8 /* ViewController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = ViewController.m; sourceTree = "<group>"; };
+		EBEC51061E9E2BA7003960D8 /* AppController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppController.h; sourceTree = "<group>"; };
+		EBEC51071E9E2BA7003960D8 /* AppController.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppController.m; sourceTree = "<group>"; };
 		EBEC51091E9E2BA7003960D8 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		EBEC510E1E9E2BA7003960D8 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		EBEC51141E9E2D06003960D8 /* MainMenu.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = MainMenu.xib; sourceTree = "<group>"; };
@@ -61,13 +67,17 @@
 			children = (
 				EBEC51001E9E2BA7003960D8 /* AppDelegate.h */,
 				EBEC51011E9E2BA7003960D8 /* AppDelegate.m */,
-				EBEC51061E9E2BA7003960D8 /* ViewController.h */,
-				EBEC51071E9E2BA7003960D8 /* ViewController.m */,
+				EBEC51061E9E2BA7003960D8 /* AppController.h */,
+				EBEC51071E9E2BA7003960D8 /* AppController.m */,
+				EB9D55B61E9FBD340059360F /* MainView.h */,
+				EB9D55B71E9FBD340059360F /* MainView.m */,
+				EBBB3C4D1EA3B35000017D02 /* WaveView.h */,
+				EBBB3C4E1EA3B35000017D02 /* WaveView.m */,
+				EBA1D0051EB073F400624988 /* NSColor+CoolEdit.h */,
+				EBA1D0061EB073F400624988 /* NSColor+CoolEdit.m */,
 				EBEC51091E9E2BA7003960D8 /* Assets.xcassets */,
 				EBEC510E1E9E2BA7003960D8 /* Info.plist */,
 				EBEC51141E9E2D06003960D8 /* MainMenu.xib */,
-				EB9D55B61E9FBD340059360F /* MainView.h */,
-				EB9D55B71E9FBD340059360F /* MainView.m */,
 				EBEC51031E9E2BA7003960D8 /* Supporting Files */,
 			);
 			path = "Circle Edit";
@@ -151,8 +161,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				EBEC51081E9E2BA7003960D8 /* ViewController.m in Sources */,
+				EBEC51081E9E2BA7003960D8 /* AppController.m in Sources */,
+				EBBB3C4F1EA3B35000017D02 /* WaveView.m in Sources */,
 				EB9D55B81E9FBD340059360F /* MainView.m in Sources */,
+				EBA1D0071EB073F400624988 /* NSColor+CoolEdit.m in Sources */,
 				EBEC51051E9E2BA7003960D8 /* main.m in Sources */,
 				EBEC51021E9E2BA7003960D8 /* AppDelegate.m in Sources */,
 			);

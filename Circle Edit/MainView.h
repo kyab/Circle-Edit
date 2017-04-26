@@ -8,6 +8,12 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface MainView : NSView
+@interface MainView : NSView{
+    id _dragDropTarget;
+    SEL _dragDropAction;
+    SEL _dragDropTryAction;
+}
+
+-(void)setDragDrop:(id)target action:(SEL)action tryAction:(SEL)tryAction;
 
 @end

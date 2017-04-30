@@ -8,6 +8,7 @@
 
 #import "WaveView.h"
 #import "NSColor+CoolEdit.h"
+#include <objc/message.h>
 
 @implementation WaveView
 
@@ -54,6 +55,148 @@
 }
 
 - (void)drawSample{
+    
+    NSRect bounds = self.bounds;
+    float y_addition = bounds.size.height / 2.0f;
+    float y_ratio = bounds.size.height / 2.0f;
+    
+    _currentX = _currentXRate * self.bounds.size.width;
+    _loopStartX = _loopStartXRate * self.bounds.size.width;
+    _loopEndX = _loopEndXRate * self.bounds.size.width;
+    
+    
+    if (_bSelected){
+        NSRect rect = bounds;
+        rect.origin.x = _loopStartX;
+        rect.size.width = _loopEndX - _loopStartX;
+        
+        [[NSColor ceHighlightBGColor] set];
+        NSRectFill(rect);
+    }
+    
+    [[NSGraphicsContext currentContext] setShouldAntialias:NO];
+    
+    float samples_per_pixel = (float)_buffer_len / bounds.size.width;
+    
+    
+    if (_bSelected){
+        NSBezierPath *path = [NSBezierPath bezierPath];
+        [path setLineWidth:1.0f];
+        
+        UInt32 sample_from = 1;
+        UInt32 sample_to = 0;
+        
+        //draw pre selection
+        for (UInt32 pixel = 1; pixel < _loopStartX ; pixel++){
+            sample_to = (UInt32)floor(pixel * samples_per_pixel);
+            
+            float max = _leftBuf[sample_from];
+            float min = max;
+            for(int i =sample_from; i < sample_to; i++){
+                float val = _leftBuf[i];
+                if (val > 0.9) continue;
+                if (val < -0.9) continue;
+                if (val > max) max = val;
+                if (val < min) min = val;
+            }
+            
+            min = (min*y_ratio*1.0) + y_addition;
+            max = (max*y_ratio*1.0) + y_addition;
+            [path moveToPoint:NSMakePoint(pixel, min)];
+            [path lineToPoint:NSMakePoint(pixel, max)];
+            
+            sample_from = sample_to;
+        }
+        [[NSColor ceWaveColor] set];
+        [path stroke];
+        
+        //draw selection
+        path = [NSBezierPath bezierPath];
+        [path setLineWidth:1.0f];
+        for (UInt32 pixel = _loopStartX; pixel< _loopEndX ; pixel++){
+            sample_to = (UInt32)floor(pixel * samples_per_pixel);
+            
+            float max = _leftBuf[sample_from];
+            float min = max;
+            for(int i = sample_from; i < sample_to; i++){
+                float val = _leftBuf[i];
+                if (val > 0.9) continue;
+                if (val < -0.9) continue;
+                if (val > max) max = val;
+                if (val < min) min = val;
+            }
+            
+            min = (min*y_ratio*1.0) + y_addition;
+            max = (max*y_ratio*1.0) + y_addition;
+            [path moveToPoint:NSMakePoint(pixel, min)];
+            [path lineToPoint:NSMakePoint(pixel, max)];
+            
+            sample_from = sample_to;
+        }
+        [[NSColor ceHighlightWaveColor] set];
+        [path stroke];
+
+        //draw post selection
+        path = [NSBezierPath bezierPath];
+        [path setLineWidth:1.0f];
+        for (SInt32 pixel = _loopEndX; pixel< bounds.size.width ; pixel++){
+            sample_to = (UInt32)floor(pixel * samples_per_pixel);
+            
+            float max = _leftBuf[sample_from];
+            float min = max;
+            for(int i = sample_from; i < sample_to; i++){
+                float val = _leftBuf[i];
+                if (val > 0.9) continue;
+                if (val < -0.9) continue;
+                if (val > max) max = val;
+                if (val < min) min = val;
+            }
+            
+            min = (min*y_ratio*1.0) + y_addition;
+            max = (max*y_ratio*1.0) + y_addition;
+            [path moveToPoint:NSMakePoint(pixel, min)];
+            [path lineToPoint:NSMakePoint(pixel, max)];
+            
+            sample_from = sample_to;
+        }
+        [[NSColor ceWaveColor] set];
+        [path stroke];
+        
+    }else{
+        NSBezierPath *path = [NSBezierPath bezierPath];
+        [path setLineWidth:1.0f];
+        
+        UInt32 sample_from = 1;
+        UInt32 sample_to = 0;
+        
+        for (UInt32 pixel = 1; pixel < bounds.size.width ; pixel++){
+            sample_to = (UInt32)floor(pixel * samples_per_pixel);
+            
+            float max = _leftBuf[sample_from];
+            float min = max;
+            for(int i =sample_from; i < sample_to; i++){
+                float val = _leftBuf[i];
+                if (val > 0.9) continue;
+                if (val < -0.9) continue;
+                if (val > max) max = val;
+                if (val < min) min = val;
+            }
+            
+            min = (min*y_ratio*1.0) + y_addition;
+            max = (max*y_ratio*1.0) + y_addition;
+            [path moveToPoint:NSMakePoint(pixel, min)];
+            [path lineToPoint:NSMakePoint(pixel, max)];
+            
+            sample_from = sample_to;
+        }
+        
+        [[NSColor ceWaveColor] set];
+        [path stroke];
+    }
+    [[NSGraphicsContext currentContext] setShouldAntialias:YES];
+}
+
+- (void)drawSample_simple{
     
     NSBezierPath *path = [NSBezierPath bezierPath];
     NSRect bounds = [self bounds];
@@ -106,21 +249,26 @@
 }
 
 -(void)mouseDown:(NSEvent *)theEvent{
-    NSLog(@"mouseDown(%ld) at %@",(long)theEvent.clickCount, [self eventLocationStr:theEvent] );
+  
     _bSelected = NO;
     _startX = [self eventLocation:theEvent].x;
     _currentX = _startX;
     _loopStartX = _startX;
     _loopEndX = _startX;
     
+    _currentXRate = _currentX/self.bounds.size.width;
+    _loopStartXRate = _loopStartX/self.bounds.size.width;
+    _loopEndXRate = _loopEndX/self.bounds.size.width;
+    
+    [self selectionUpdated];
     [self setNeedsDisplay:YES];
 }
 
 - (void)mouseDragged:(NSEvent *)theEvent{
-    NSLog(@"mouseDragged at %@",  [self eventLocationStr:theEvent]);
     CGFloat x = [self eventLocation:theEvent].x;
     if (x < _startX){
         _loopStartX = x;
+        if (_loopStartX < 0) _loopStartX = 0;
         _loopEndX = _startX;
     }else{
         _loopEndX = x;
@@ -130,6 +278,11 @@
     }else{
         _bSelected = YES;
     }
+    
+    _loopStartXRate = _loopStartX/self.bounds.size.width;
+    _loopEndXRate = _loopEndX/self.bounds.size.width;
+    
+    [self selectionUpdated];
     [self setNeedsDisplay:YES];
 }
 
@@ -137,6 +290,7 @@
     CGFloat x = [self eventLocation:theEvent].x;
     if (x < _startX){
         _loopStartX = x;
+        if (_loopStartX < 0) _loopStartX = 0;
         _loopEndX = _startX;
     }else{
         _loopEndX = x;
@@ -146,7 +300,12 @@
     }else{
         _bSelected = YES;
     }
-    NSLog(@"mouseUp at %@", [self eventLocationStr:theEvent]);
+    [self setNeedsDisplay:YES];
+    
+    _loopStartXRate = _loopStartX/self.bounds.size.width;
+    _loopEndXRate = _loopEndX/self.bounds.size.width;
+    
+    [self selectionUpdated];
     [self setNeedsDisplay:YES];
     
 }
@@ -159,8 +318,14 @@
 #define KEY_RIGHT_ARROW 124
 
 - (void)keyDown:(NSEvent *)theEvent{
-    NSLog(@"keycode = %hu", theEvent.keyCode);
+
+    _currentX = _currentXRate * self.bounds.size.width;
+    _loopStartX = _loopStartXRate * self.bounds.size.width;
+    _loopEndX = _loopEndXRate * self.bounds.size.width;
+    
+    Boolean processed = NO;
     if (theEvent.modifierFlags & NSEventModifierFlagShift){
+
         if (theEvent.keyCode == KEY_LEFT_ARROW){
             if (_bSelected){
                 _loopEndX -= 1;
@@ -170,8 +335,9 @@
                 }
             }else{
                 _currentX -= 1;
+                if (_currentX < 0) _currentX = 0;
             }
-            [self setNeedsDisplay:YES];
+            processed = YES;
         }else if (theEvent.keyCode == KEY_RIGHT_ARROW){
             if (_bSelected){
                 _loopEndX += 1;
@@ -180,18 +346,20 @@
                 _loopEndX = _loopStartX+1;
                 _bSelected = YES;
             }
-            [self setNeedsDisplay:YES];
+            processed = YES;
         }
     }else{
         if (theEvent.keyCode == KEY_LEFT_ARROW){
             if (_bSelected){
                 _loopStartX -= 1;
+                if (_loopStartX < 0) _loopStartX = 0;
             }else{
                 _loopStartX = _currentX - 1;
+                if (_loopStartX < 0 ) _loopStartX = 0;
                 _loopEndX = _currentX;
                 _bSelected = YES;
             }
-            [self setNeedsDisplay:YES];
+            processed = YES;
         }else if (theEvent.keyCode == KEY_RIGHT_ARROW){
             if (_bSelected){
                 _loopStartX += 1;
@@ -202,32 +370,51 @@
             }else{
                 _currentX += 1;
             }
-            [self setNeedsDisplay:YES];
+            processed = YES;
+            
         }
+    }
+    if (processed){
+        _currentXRate = _currentX/self.bounds.size.width;
+        _loopStartXRate = _loopStartX/self.bounds.size.width;
+        _loopEndXRate = _loopEndX/self.bounds.size.width;
+        [self selectionUpdated];
+        [self setNeedsDisplay:YES];
+    }else{
+        [self.nextResponder keyDown:theEvent];
     }
 }
 
 - (void)rightMouseDown:(NSEvent *)theEvent{
-    NSLog(@"right mouse down");
 }
 
 - (void)rightMouseDragged:(NSEvent *)theEvent{
-    NSLog(@"right mouse dragged");
 }
 
 - (void)rightMouseUp:(NSEvent *)theEvent{
-    NSLog(@"right mouse up");
 }
 
 - (void)scrollWheel:(NSEvent *)event{
-    NSLog(@"scroll wheel");
 }
 
--(void)setBuffer:(float *)left right:(float *)right len:(UInt32)len{
+-(void)setBuffer:(const float *)left right:(const float *)right len:(UInt32)len{
     _leftBuf = left;
     _rightBuf = right;
     _buffer_len = len;
     [self setNeedsDisplay:YES];
+}
+
+-(void)setSelectionUpdateNotify:(id)target action:(SEL)callback{
+    _selectionUpdateTarget = target;
+    _selectionUpdateCallback = callback;
+}
+
+-(void)selectionUpdated{
+     ((void(*)(id, SEL, Boolean, double ,double ))objc_msgSend)(_selectionUpdateTarget,
+                 _selectionUpdateCallback,
+                 _bSelected,
+                 _loopStartXRate,
+                 _loopEndXRate);
 }
 
 

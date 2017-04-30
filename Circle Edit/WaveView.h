@@ -17,11 +17,19 @@
     CGFloat _loopEndX;
     Boolean _bSelected;
     
-    float *_leftBuf;
-    float *_rightBuf;
+    double _startXRate;
+    double _currentXRate;
+    double _loopStartXRate;
+    double _loopEndXRate;
+    
+    const float *_leftBuf;
+    const float *_rightBuf;
     UInt32 _buffer_len;
+    
+    SEL _selectionUpdateCallback;
+    id _selectionUpdateTarget;
 }
 
--(void)setBuffer:(float *)left right:(float *)right len:(UInt32)len;
-
+-(void)setBuffer:(const float *)left right:(const float *)right len:(UInt32)len;
+-(void)setSelectionUpdateNotify:(id)target action:(SEL)callback;
 @end

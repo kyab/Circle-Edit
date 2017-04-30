@@ -25,7 +25,88 @@
     
     [(MainView *)[self view] setDragDrop:self action:@selector(onDragDrop:) tryAction:@selector(onTryDragDrop:)];
     
+    [_waveView setSelectionUpdateNotify:self action:@selector(onSelectionUpdated:startFrom:end:)];
+
+    ae = [[AudioEngine alloc] init];
+    if ([ae initialize]){
+        NSLog(@"AudioEngine initialized");
+    }
+    
+    [ae setRenderDelegate:(id<AudioEngineDelegate>)self];
+    
 }
+
+- (OSStatus) renderOutput:(AudioUnitRenderActionFlags *)ioActionFlags inTimeStamp:(const AudioTimeStamp *) inTimeStamp inBusNumber:(UInt32) inBusNumber inNumberFrames:(UInt32)inNumberFrames ioData:(AudioBufferList *)ioData{
+    
+    
+    {
+        static UInt32 count = 0;
+        if ((count % 100) == 0){
+            NSLog(@"AppController outCallback inNumberFrames = %u", inNumberFrames);
+        }
+        count++;
+    }
+    
+    
+    if (_buffer_len == 0){
+        //zero output
+        UInt32 sampleNum = inNumberFrames;
+        float *pLeft = (float *)ioData->mBuffers[0].mData;
+        float *pRight = (float *)ioData->mBuffers[1].mData;
+        bzero(pLeft,sizeof(float)*sampleNum );
+        bzero(pRight,sizeof(float)*sampleNum );
+        return noErr;
+    }
+    
+    UInt32 firstCopy_num = inNumberFrames;
+    UInt32 secondCopy_num = 0;
+    if (_bSelected){
+        if ( _playingFrame > _loopEndFrame){
+            firstCopy_num = 0;
+            secondCopy_num = inNumberFrames;
+        }else if ( _playingFrame + firstCopy_num > _loopEndFrame ) {
+            firstCopy_num = _loopEndFrame - _playingFrame;
+            secondCopy_num = inNumberFrames - firstCopy_num;
+        }
+    }else{
+        if ( _playingFrame + firstCopy_num > _buffer_len){
+            firstCopy_num = _buffer_len - _playingFrame;
+            secondCopy_num = inNumberFrames - firstCopy_num;
+        }
+    }
+    
+    memcpy(ioData->mBuffers[0].mData,
+               &(_leftBuf[_playingFrame]), firstCopy_num*sizeof(float));
+    memcpy(ioData->mBuffers[1].mData,
+               &(_rightBuf[_playingFrame]), firstCopy_num*sizeof(float));
+    
+    if (secondCopy_num > 0){
+        UInt32 from = 0;
+        if (_bSelected) from = _loopStartFrame;
+        memcpy(ioData->mBuffers[0].mData+firstCopy_num*sizeof(float),
+               &(_leftBuf[from]), secondCopy_num*sizeof(float));
+        memcpy(ioData->mBuffers[1].mData+firstCopy_num*sizeof(float),
+               &(_rightBuf[from]), secondCopy_num*sizeof(float));
+        
+        _playingFrame = from + secondCopy_num;
+    }else{
+        _playingFrame += firstCopy_num;
+    }
+    
+    
+    return noErr;
+}
+
+
+
+-(void)onSelectionUpdated:(Boolean)bSelected startFrom:(double)startRatio end:(double)endRatio{
+    ;
+    NSLog(@"bSelected:%u startFrom:%.3f, end:%.3f", bSelected, startRatio , endRatio);
+    _bSelected = bSelected;
+    _loopStartFrame = (UInt32)(_buffer_len * startRatio);
+    _loopEndFrame = (UInt32)(_buffer_len * endRatio);
+}
+
 
 - (Boolean)onDragDrop:(NSString *)path{
     return [self loadFile:path];
@@ -35,12 +116,25 @@
     return [self tryLoadFile:path];
 }
 
-
-
 - (void)setRepresentedObject:(id)representedObject {
     [super setRepresentedObject:representedObject];
 
     // Update the view, if already loaded.
+}
+
+- (IBAction)onStartStop:(id)sender {
+    if ([ae isPlaying]){
+        [ae stop];
+        [_btnStartStop setTitle:@"Play"];
+    }else{
+        if (_bSelected){
+            _playingFrame = _loopStartFrame;
+        }else{
+            _playingFrame = 0;
+        }
+        [ae start];
+        [_btnStartStop setTitle:@"Stop"];
+    }
 }
 
 - (Boolean)tryLoadFile:(NSString *)path {
@@ -149,7 +243,7 @@
             break;
         }else{
             ret = ExtAudioFileTell(extAudioFile, &currentFrame);
-            NSLog(@"loaded :%% %f", currentFrame/(float)totalFrame);
+//            NSLog(@"loaded :%% %f", currentFrame/(float)totalFrame);
         }
     }
     free(bufferList);

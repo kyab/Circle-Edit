@@ -10,6 +10,8 @@
 		EB9D55B81E9FBD340059360F /* MainView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB9D55B71E9FBD340059360F /* MainView.m */; };
 		EBA1D0071EB073F400624988 /* NSColor+CoolEdit.m in Sources */ = {isa = PBXBuildFile; fileRef = EBA1D0061EB073F400624988 /* NSColor+CoolEdit.m */; };
 		EBBB3C4F1EA3B35000017D02 /* WaveView.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBB3C4E1EA3B35000017D02 /* WaveView.m */; };
+		EBBCBC0F1EB2321B0033BF2F /* AudioEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBCBC0E1EB2321B0033BF2F /* AudioEngine.m */; };
+		EBBCBC121EB232B80033BF2F /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBBCBC111EB232B80033BF2F /* AudioToolbox.framework */; };
 		EBEC51021E9E2BA7003960D8 /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = EBEC51011E9E2BA7003960D8 /* AppDelegate.m */; };
 		EBEC51051E9E2BA7003960D8 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = EBEC51041E9E2BA7003960D8 /* main.m */; };
 		EBEC51081E9E2BA7003960D8 /* AppController.m in Sources */ = {isa = PBXBuildFile; fileRef = EBEC51071E9E2BA7003960D8 /* AppController.m */; };
@@ -24,6 +26,9 @@
 		EBA1D0061EB073F400624988 /* NSColor+CoolEdit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSColor+CoolEdit.m"; sourceTree = "<group>"; };
 		EBBB3C4D1EA3B35000017D02 /* WaveView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WaveView.h; sourceTree = "<group>"; };
 		EBBB3C4E1EA3B35000017D02 /* WaveView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WaveView.m; sourceTree = "<group>"; };
+		EBBCBC0D1EB2321B0033BF2F /* AudioEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioEngine.h; sourceTree = "<group>"; };
+		EBBCBC0E1EB2321B0033BF2F /* AudioEngine.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AudioEngine.m; sourceTree = "<group>"; };
+		EBBCBC111EB232B80033BF2F /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		EBEC50FD1E9E2BA7003960D8 /* Circle Edit.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Circle Edit.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		EBEC51001E9E2BA7003960D8 /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
 		EBEC51011E9E2BA7003960D8 /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
@@ -40,17 +45,27 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EBBCBC121EB232B80033BF2F /* AudioToolbox.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		EBBCBC101EB232B80033BF2F /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				EBBCBC111EB232B80033BF2F /* AudioToolbox.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		EBEC50F41E9E2BA7003960D8 = {
 			isa = PBXGroup;
 			children = (
 				EBEC50FF1E9E2BA7003960D8 /* Circle Edit */,
 				EBEC50FE1E9E2BA7003960D8 /* Products */,
+				EBBCBC101EB232B80033BF2F /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -65,14 +80,16 @@
 		EBEC50FF1E9E2BA7003960D8 /* Circle Edit */ = {
 			isa = PBXGroup;
 			children = (
-				EBEC51001E9E2BA7003960D8 /* AppDelegate.h */,
-				EBEC51011E9E2BA7003960D8 /* AppDelegate.m */,
 				EBEC51061E9E2BA7003960D8 /* AppController.h */,
 				EBEC51071E9E2BA7003960D8 /* AppController.m */,
-				EB9D55B61E9FBD340059360F /* MainView.h */,
-				EB9D55B71E9FBD340059360F /* MainView.m */,
 				EBBB3C4D1EA3B35000017D02 /* WaveView.h */,
 				EBBB3C4E1EA3B35000017D02 /* WaveView.m */,
+				EBBCBC0D1EB2321B0033BF2F /* AudioEngine.h */,
+				EBBCBC0E1EB2321B0033BF2F /* AudioEngine.m */,
+				EBEC51001E9E2BA7003960D8 /* AppDelegate.h */,
+				EBEC51011E9E2BA7003960D8 /* AppDelegate.m */,
+				EB9D55B61E9FBD340059360F /* MainView.h */,
+				EB9D55B71E9FBD340059360F /* MainView.m */,
 				EBA1D0051EB073F400624988 /* NSColor+CoolEdit.h */,
 				EBA1D0061EB073F400624988 /* NSColor+CoolEdit.m */,
 				EBEC51091E9E2BA7003960D8 /* Assets.xcassets */,
@@ -167,6 +184,7 @@
 				EBA1D0071EB073F400624988 /* NSColor+CoolEdit.m in Sources */,
 				EBEC51051E9E2BA7003960D8 /* main.m in Sources */,
 				EBEC51021E9E2BA7003960D8 /* AppDelegate.m in Sources */,
+				EBBCBC0F1EB2321B0033BF2F /* AudioEngine.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

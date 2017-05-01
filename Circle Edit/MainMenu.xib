@@ -99,9 +99,9 @@
                                     <action selector="saveDocument:" target="-1" id="teZ-XB-qJY"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Save As…" keyEquivalent="S" id="Bw7-FT-i3A">
+                            <menuItem title="Save As…" keyEquivalent="S" identifier="saveAs" id="Bw7-FT-i3A">
                                 <connections>
-                                    <action selector="saveDocumentAs:" target="-1" id="mDf-zr-I0C"/>
+                                    <action selector="saveDocumentAs:" target="pz8-cR-PoC" id="8HV-iA-evW"/>
                                 </connections>
                             </menuItem>
                             <menuItem title="Revert to Saved" keyEquivalent="r" id="KaW-ft-85H">
@@ -687,7 +687,11 @@
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="hL8-bF-dIR" customClass="WaveView">
-                        <rect key="frame" x="20" y="65" width="831" height="372"/>
+                        <rect key="frame" x="26" y="52" width="831" height="372"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                    </customView>
+                    <customView fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ZXA-Le-MWm" customClass="OverlayView">
+                        <rect key="frame" x="136" y="24" width="598" height="304"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                     </customView>
                     <button verticalHuggingPriority="750" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1hm-lU-ea3">
@@ -711,6 +715,7 @@ IA
         <customObject id="pz8-cR-PoC" customClass="AppController">
             <connections>
                 <outlet property="_btnStartStop" destination="1hm-lU-ea3" id="Q8x-vN-RzB"/>
+                <outlet property="_overlayView" destination="ZXA-Le-MWm" id="GEt-Kt-94u"/>
                 <outlet property="_waveView" destination="hL8-bF-dIR" id="WSs-4D-DEW"/>
                 <outlet property="view" destination="S8V-yh-S5o" id="rPv-B7-kPW"/>
             </connections>

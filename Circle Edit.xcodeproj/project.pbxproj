@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		EB4137831EB62B2600A59A9B /* OverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB4137821EB62B2600A59A9B /* OverlayView.m */; };
 		EB9D55B81E9FBD340059360F /* MainView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB9D55B71E9FBD340059360F /* MainView.m */; };
 		EBA1D0071EB073F400624988 /* NSColor+CoolEdit.m in Sources */ = {isa = PBXBuildFile; fileRef = EBA1D0061EB073F400624988 /* NSColor+CoolEdit.m */; };
 		EBBB3C4F1EA3B35000017D02 /* WaveView.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBB3C4E1EA3B35000017D02 /* WaveView.m */; };
@@ -20,6 +21,8 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		EB4137811EB62B2600A59A9B /* OverlayView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OverlayView.h; sourceTree = "<group>"; };
+		EB4137821EB62B2600A59A9B /* OverlayView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OverlayView.m; sourceTree = "<group>"; };
 		EB9D55B61E9FBD340059360F /* MainView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MainView.h; sourceTree = "<group>"; };
 		EB9D55B71E9FBD340059360F /* MainView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainView.m; sourceTree = "<group>"; };
 		EBA1D0051EB073F400624988 /* NSColor+CoolEdit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSColor+CoolEdit.h"; sourceTree = "<group>"; };
@@ -84,6 +87,8 @@
 				EBEC51071E9E2BA7003960D8 /* AppController.m */,
 				EBBB3C4D1EA3B35000017D02 /* WaveView.h */,
 				EBBB3C4E1EA3B35000017D02 /* WaveView.m */,
+				EB4137811EB62B2600A59A9B /* OverlayView.h */,
+				EB4137821EB62B2600A59A9B /* OverlayView.m */,
 				EBBCBC0D1EB2321B0033BF2F /* AudioEngine.h */,
 				EBBCBC0E1EB2321B0033BF2F /* AudioEngine.m */,
 				EBEC51001E9E2BA7003960D8 /* AppDelegate.h */,
@@ -183,6 +188,7 @@
 				EB9D55B81E9FBD340059360F /* MainView.m in Sources */,
 				EBA1D0071EB073F400624988 /* NSColor+CoolEdit.m in Sources */,
 				EBEC51051E9E2BA7003960D8 /* main.m in Sources */,
+				EB4137831EB62B2600A59A9B /* OverlayView.m in Sources */,
 				EBEC51021E9E2BA7003960D8 /* AppDelegate.m in Sources */,
 				EBBCBC0F1EB2321B0033BF2F /* AudioEngine.m in Sources */,
 			);

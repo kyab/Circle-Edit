@@ -25,7 +25,12 @@
     
     [(MainView *)[self view] setDragDrop:self action:@selector(onDragDrop:) tryAction:@selector(onTryDragDrop:)];
     
-    [_waveView setSelectionUpdateNotify:self action:@selector(onSelectionUpdated:startFrom:end:)];
+    [_waveView setSelectionUpdateNotify:self action:@selector(onSelectionUpdated:startFrom:end:noLoopPlayFrom:)];
+    
+    _timer = [NSTimer scheduledTimerWithTimeInterval:0.05 target:self selector:@selector(onTimer:) userInfo:nil repeats:YES];
+    
+    [_overlayView setFrame:_waveView.frame];
+    
 
     ae = [[AudioEngine alloc] init];
     if ([ae initialize]){
@@ -93,18 +98,29 @@
         _playingFrame += firstCopy_num;
     }
     
+//    [self onTimer:nil];
     
     return noErr;
 }
 
+-(void)onTimer:(NSTimer *)t;
+{
+    
+    if ([ae isPlaying]){
+        [_overlayView setPlayingFrameRate:((double)(_playingFrame))/_buffer_len];
+    }
+    
+}
 
 
--(void)onSelectionUpdated:(Boolean)bSelected startFrom:(double)startRatio end:(double)endRatio{
-    ;
+-(void)onSelectionUpdated:(Boolean)bSelected startFrom:(double)startRatio
+                      end:(double)endRatio noLoopPlayFrom:(double)noLoopPlayFromRate{
+
     NSLog(@"bSelected:%u startFrom:%.3f, end:%.3f", bSelected, startRatio , endRatio);
     _bSelected = bSelected;
     _loopStartFrame = (UInt32)(_buffer_len * startRatio);
     _loopEndFrame = (UInt32)(_buffer_len * endRatio);
+    _noLoopStartFrame = (UInt32)(_buffer_len * noLoopPlayFromRate);
 }
 
 
@@ -126,12 +142,16 @@
     if ([ae isPlaying]){
         [ae stop];
         [_btnStartStop setTitle:@"Play"];
+        [_overlayView setIsPlaying:NO];
+        
     }else{
         if (_bSelected){
             _playingFrame = _loopStartFrame;
         }else{
-            _playingFrame = 0;
+            _playingFrame = _noLoopStartFrame;
         }
+        [_overlayView setPlayingFrameRate:(double)(_playingFrame)/_buffer_len];
+        [_overlayView setIsPlaying:YES];
         [ae start];
         [_btnStartStop setTitle:@"Stop"];
     }
@@ -252,10 +272,139 @@
     
     
     NSLog(@"load file OK : %@", path);
+    
+    
+    _loopStartFrame = 0;
+    _loopEndFrame = 0;
+    _noLoopStartFrame = 0;
+    _playingFrame = 0;
+    _bSelected = 0;
+    
+    [_waveView setBuffer:_leftBuf right:_rightBuf len:_buffer_len];
+    
+    
     return YES;
 }
 
 
+
+-(Boolean)saveFile:(NSURL *)fileURL{
+    OSStatus ret = noErr;
+    ExtAudioFileRef extAudioFile;
+
+    
+    AudioStreamBasicDescription fileformat = {0};
+    fileformat.mFormatID = kAudioFormatLinearPCM;
+    fileformat.mSampleRate = 44100.0;
+    fileformat.mFormatFlags = kLinearPCMFormatFlagIsSignedInteger | kAudioFormatFlagIsPacked;
+    fileformat.mBytesPerPacket = 4;
+    fileformat.mFramesPerPacket = 1;
+    fileformat.mBytesPerFrame = 4;
+    fileformat.mChannelsPerFrame = 2;
+    fileformat.mBitsPerChannel=16;
+    
+    
+    
+    CFURLRef urlRef = CFBridgingRetain(fileURL);
+    ret = ExtAudioFileCreateWithURL(urlRef,
+                                    kAudioFileWAVEType,
+                                    &fileformat,
+                                    NULL,
+                                    0,
+                                    &extAudioFile);
+    if (FAILED(ret)){
+        NSError *err = [NSError errorWithDomain:NSOSStatusErrorDomain code:ret userInfo:nil];
+        NSLog(@"Failed ExtAudioFileCreateWithURL err=%d(%@)", ret, [err description]);
+        return NO;
+    }
+    if (extAudioFile == 0){
+        NSError *err = [NSError errorWithDomain:NSOSStatusErrorDomain code:ret userInfo:nil];
+        NSLog(@"Failed to create file err=%d(%@)", ret, [err description]);
+        return NO;
+    }
+    
+
+    AudioStreamBasicDescription asbd = {0};
+    asbd.mSampleRate = 44100.0;
+    asbd.mFormatID = kAudioFormatLinearPCM;
+    asbd.mFormatFlags = kAudioFormatFlagIsFloat | kAudioFormatFlagIsPacked | kAudioFormatFlagIsNonInterleaved;
+    asbd.mBytesPerPacket = 4;
+    asbd.mFramesPerPacket = 1;
+    asbd.mBytesPerFrame = 4;
+    asbd.mChannelsPerFrame = 2;
+    asbd.mBitsPerChannel = 32;
+    
+    ret = ExtAudioFileSetProperty(extAudioFile,
+                                  kExtAudioFileProperty_ClientDataFormat, sizeof(asbd), &asbd);
+    
+    if (FAILED(ret)){
+        NSError *err = [NSError errorWithDomain:NSOSStatusErrorDomain code:ret userInfo:nil];
+        NSLog(@"Failed to set client format err=%d(%@)", ret, [err description]);
+        return NO;
+    }
+    
+    //from RecordAudioToFile sample.
+    AudioBufferList *bufferList = (AudioBufferList *)malloc(sizeof(AudioBufferList) +  sizeof(AudioBuffer)); // for 2 buffers for left and right
+    bufferList->mNumberBuffers = 2;
+    bufferList->mBuffers[0].mData = &(_leftBuf[_loopStartFrame]);
+    bufferList->mBuffers[1].mData = &(_rightBuf[_loopStartFrame]);
+    bufferList->mBuffers[0].mNumberChannels = 1;
+    bufferList->mBuffers[1].mNumberChannels = 1;
+    bufferList->mBuffers[0].mDataByteSize = sizeof(float) * (_loopEndFrame - _loopStartFrame);
+    bufferList->mBuffers[1].mDataByteSize = sizeof(float) * (_loopEndFrame - _loopStartFrame);
+
+    ret = ExtAudioFileWrite(extAudioFile, _loopEndFrame - _loopStartFrame, bufferList);
+    if (FAILED(ret)){
+        NSError *err = [NSError errorWithDomain:NSOSStatusErrorDomain code:ret userInfo:nil];
+        NSLog(@"Failed to write wave data err=%d(%@)", ret, [err description]);
+        return NO;
+    }
+    
+    
+    
+    ExtAudioFileDispose(extAudioFile);
+    
+    NSLog(@"save file OK : %@", fileURL);
+    return YES;
+}
+
+
+
+//save selection as external file
+- (IBAction)saveDocumentAs:(id)sender {
+    NSLog(@"save as ");
+
+    NSSavePanel *savePanel = [NSSavePanel savePanel];
+    NSArray *allowedFileTypes = [NSArray arrayWithObjects:@"wav",@"aiff",nil];
+    [savePanel setAllowedFileTypes:allowedFileTypes];
+    [savePanel setTitle:@"save selection as.."];
+    [savePanel setExtensionHidden:NO];
+    NSInteger pressedButton = [savePanel runModal];
+    
+    
+    if (pressedButton == NSFileHandlingPanelOKButton) {
+        NSURL *fileURL = [savePanel URL];
+        if (![self saveFile:fileURL]){
+            NSAlert *alert = [[NSAlert alloc] init];
+            [alert setMessageText:@"save error"];
+            [alert setInformativeText:[NSString stringWithFormat:@"error on save as %@",fileURL.path]];
+            [alert setAlertStyle:NSAlertStyleCritical];
+            [alert runModal];
+        }
+    }
+}
+
+
+-(BOOL)validateMenuItem:(NSMenuItem *)item{
+    if ([[item identifier] isEqualToString:@"saveAs"]){
+        if (_buffer_len > 0){
+            if (_bSelected){
+                return YES;
+            }
+        }
+    }
+    return NO;
+}
 
 
 @end

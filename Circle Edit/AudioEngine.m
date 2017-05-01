@@ -85,19 +85,7 @@ OSStatus MyRender(void *inRefCon,
     AudioComponentDescription cd;
     
     
-//    cd.componentType = kAudioUnitType_FormatConverter;
-//    cd.componentSubType = kAudioUnitSubType_AUConverter;
-//    cd.componentManufacturer = kAudioUnitManufacturer_Apple;
-//    cd.componentFlags = 0;
-//    cd.componentFlagsMask = 0;
-//    AUNode converterNode;
-//    AUGraphAddNode(_graph, &cd, &converterNode);
-//    ret = AUGraphNodeInfo(_graph, converterNode, NULL, &_converterUnit);
-//    if (FAILED(ret)){
-//        NSLog(@"failed to AUGraphNodeInfo for AUConverter");
-//        return NO;
-//    }
-//    
+
     cd.componentType = kAudioUnitType_Output;
     cd.componentSubType = kAudioUnitSubType_DefaultOutput;
     cd.componentManufacturer = kAudioUnitManufacturer_Apple;
@@ -137,41 +125,13 @@ OSStatus MyRender(void *inRefCon,
     asbd.mChannelsPerFrame = 2;
     asbd.mBitsPerChannel = 32;
     
-//    ret = AudioUnitSetProperty(_converterUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, &asbd, size);
-//    if (FAILED(ret)){
-//        NSLog(@"failed to kAudioUnitProperty_StreamFormat for converter(I)");
-//        return NO;
-//    }
-    
     
     ret = AudioUnitSetProperty(_outUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, &asbd, size);
     if (FAILED(ret)){
         NSLog(@"failed to kAudioUnitProperty_StreamFormat for output(I)");
         return NO;
     }
-    
-    AudioStreamBasicDescription outputFormatTmp;
-    
-//    ret = AudioUnitGetProperty(_outUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Input, 0, &outputFormatTmp, &size);
-//    if (FAILED(ret)){
-//        NSLog(@"failed to Get kAudioUnitProperty_StreamFormat(TimePitch in)");
-//        return NO;
-//    }
-//    
-//    ret = AudioUnitSetProperty(_converterUnit, kAudioUnitProperty_StreamFormat, kAudioUnitScope_Output, 0, &outputFormatTmp, size);
-//    if (FAILED(ret)){
-//        NSLog(@"failed to kAudioUnitProperty_StreamFormat for converter(O)");
-//        return NO;
-//    }
 
-    
-    
-//    ret = AUGraphConnectNodeInput(_graph, converterNode,0, outNode,0);
-//    if (FAILED(ret)){
-//        NSLog(@"failed to connect node (from converter to timepitch)");
-//        return NO;
-//    }
-    
     ret = AUGraphInitialize(_graph);
     if (FAILED(ret)){
         NSLog(@"failed to AUGraphInitialize");

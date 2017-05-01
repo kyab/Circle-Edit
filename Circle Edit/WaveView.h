@@ -12,7 +12,7 @@
     
     CGFloat _startX;
     CGFloat _currentX;
-    
+        
     CGFloat _loopStartX;
     CGFloat _loopEndX;
     Boolean _bSelected;

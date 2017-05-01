@@ -192,8 +192,29 @@
         
         [[NSColor ceWaveColor] set];
         [path stroke];
+        
+        
+        [[NSGraphicsContext currentContext] setShouldAntialias:NO];
+        //start cursor
+        [[NSColor yellowColor] set];
+        path = [NSBezierPath bezierPath];
+        [path moveToPoint:NSMakePoint(_currentX, 0)];
+        [path lineToPoint:NSMakePoint(_currentX, self.bounds.size.height)];
+        [path setLineWidth:1.0];
+        CGFloat pat[] = {1.0, 3.0};
+        [path setLineDash:pat count:2 phase:0.0];
+        [path stroke];
+        
+        
+        
     }
+
     [[NSGraphicsContext currentContext] setShouldAntialias:YES];
+    
+
+
+    
+
 }
 
 - (void)drawSample_simple{
@@ -265,12 +286,17 @@
 }
 
 - (void)mouseDragged:(NSEvent *)theEvent{
+    
+    
     CGFloat x = [self eventLocation:theEvent].x;
     if (x < _startX){
         _loopStartX = x;
         if (_loopStartX < 0) _loopStartX = 0;
         _loopEndX = _startX;
     }else{
+        if (_startX < x){
+            _loopStartX = _startX;
+        }
         _loopEndX = x;
     }
     if (fabs(_loopEndX - _loopStartX) <= 1.0f){
@@ -287,12 +313,16 @@
 }
 
 - (void)mouseUp:(NSEvent *)theEvent{
+    
     CGFloat x = [self eventLocation:theEvent].x;
     if (x < _startX){
         _loopStartX = x;
         if (_loopStartX < 0) _loopStartX = 0;
         _loopEndX = _startX;
     }else{
+        if (_startX < x){
+            _loopStartX = _startX;
+        }
         _loopEndX = x;
     }
     if (fabs(_loopEndX - _loopStartX) <= 1.0f){
@@ -300,7 +330,6 @@
     }else{
         _bSelected = YES;
     }
-    [self setNeedsDisplay:YES];
     
     _loopStartXRate = _loopStartX/self.bounds.size.width;
     _loopEndXRate = _loopEndX/self.bounds.size.width;
@@ -401,6 +430,21 @@
     _leftBuf = left;
     _rightBuf = right;
     _buffer_len = len;
+    
+    
+    _startX = 0;
+    _currentX = 0;
+    
+    _loopStartX = 0;
+    _loopEndX = 0;
+    _bSelected = 0;
+    
+    _startXRate = 0;
+    _currentXRate = 0;
+    _loopStartXRate = 0;
+    _loopEndXRate = 0;
+    
+    
     [self setNeedsDisplay:YES];
 }
 
@@ -410,11 +454,12 @@
 }
 
 -(void)selectionUpdated{
-     ((void(*)(id, SEL, Boolean, double ,double ))objc_msgSend)(_selectionUpdateTarget,
+     ((void(*)(id, SEL, Boolean, double ,double, double ))objc_msgSend)(_selectionUpdateTarget,
                  _selectionUpdateCallback,
                  _bSelected,
                  _loopStartXRate,
-                 _loopEndXRate);
+                 _loopEndXRate,
+                 _currentXRate);
 }
 
 

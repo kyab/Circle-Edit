@@ -62,13 +62,13 @@ OSStatus MyRender(void *inRefCon,
 
 
 
--(Boolean)initialize{
+-(BOOL)initialize{
     
     return [self initializeOutput];
 }
 
 
-- (Boolean)initializeOutput{
+- (BOOL)initializeOutput{
     OSStatus ret = noErr;
     
     ret = NewAUGraph(&_graph);
@@ -143,7 +143,7 @@ OSStatus MyRender(void *inRefCon,
 }
 
 
--(Boolean)start{
+-(BOOL)start{
     
     OSStatus ret = AUGraphStart(_graph);
     if (FAILED(ret)){
@@ -155,7 +155,7 @@ OSStatus MyRender(void *inRefCon,
     return YES;
 }
 
--(Boolean)stop{
+-(BOOL)stop{
     OSStatus ret = AUGraphStop(_graph);
     if (FAILED(ret)){
         NSError *err = [NSError errorWithDomain:NSOSStatusErrorDomain code:ret userInfo:nil];
@@ -167,7 +167,7 @@ OSStatus MyRender(void *inRefCon,
     
 }
 
--(Boolean)isPlaying{
+-(BOOL)isPlaying{
     return _bIsPlaying;
 }
 

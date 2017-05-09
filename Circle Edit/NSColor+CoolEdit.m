@@ -11,7 +11,7 @@
 @implementation NSColor(CoolEdit)
 
 + (NSColor *)ceBGColor{
-    return [NSColor blackColor];
+    return [[NSColor blackColor] colorWithAlphaComponent:0.1];
 }
 
 + (NSColor *)ceWaveColor{
@@ -20,7 +20,7 @@
 }
 
 + (NSColor *)ceHighlightBGColor{
-    return [NSColor whiteColor];
+    return [[NSColor whiteColor] colorWithAlphaComponent:1.0];
 }
 
 + (NSColor *)ceHighlightWaveColor{

@@ -10,6 +10,8 @@
 		EB4137831EB62B2600A59A9B /* OverlayView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB4137821EB62B2600A59A9B /* OverlayView.m */; };
 		EB9D55B81E9FBD340059360F /* MainView.m in Sources */ = {isa = PBXBuildFile; fileRef = EB9D55B71E9FBD340059360F /* MainView.m */; };
 		EBA1D0071EB073F400624988 /* NSColor+CoolEdit.m in Sources */ = {isa = PBXBuildFile; fileRef = EBA1D0061EB073F400624988 /* NSColor+CoolEdit.m */; };
+		EBAC85DD1EBA583A00A3CE4C /* OutlineView.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAC85DC1EBA583A00A3CE4C /* OutlineView.m */; };
+		EBAC85E01EBA587200A3CE4C /* WaveView2.m in Sources */ = {isa = PBXBuildFile; fileRef = EBAC85DF1EBA587200A3CE4C /* WaveView2.m */; };
 		EBBB3C4F1EA3B35000017D02 /* WaveView.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBB3C4E1EA3B35000017D02 /* WaveView.m */; };
 		EBBCBC0F1EB2321B0033BF2F /* AudioEngine.m in Sources */ = {isa = PBXBuildFile; fileRef = EBBCBC0E1EB2321B0033BF2F /* AudioEngine.m */; };
 		EBBCBC121EB232B80033BF2F /* AudioToolbox.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = EBBCBC111EB232B80033BF2F /* AudioToolbox.framework */; };
@@ -27,6 +29,10 @@
 		EB9D55B71E9FBD340059360F /* MainView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MainView.m; sourceTree = "<group>"; };
 		EBA1D0051EB073F400624988 /* NSColor+CoolEdit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSColor+CoolEdit.h"; sourceTree = "<group>"; };
 		EBA1D0061EB073F400624988 /* NSColor+CoolEdit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSColor+CoolEdit.m"; sourceTree = "<group>"; };
+		EBAC85DB1EBA583A00A3CE4C /* OutlineView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OutlineView.h; sourceTree = "<group>"; };
+		EBAC85DC1EBA583A00A3CE4C /* OutlineView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = OutlineView.m; sourceTree = "<group>"; };
+		EBAC85DE1EBA587200A3CE4C /* WaveView2.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WaveView2.h; sourceTree = "<group>"; };
+		EBAC85DF1EBA587200A3CE4C /* WaveView2.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WaveView2.m; sourceTree = "<group>"; };
 		EBBB3C4D1EA3B35000017D02 /* WaveView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = WaveView.h; sourceTree = "<group>"; };
 		EBBB3C4E1EA3B35000017D02 /* WaveView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = WaveView.m; sourceTree = "<group>"; };
 		EBBCBC0D1EB2321B0033BF2F /* AudioEngine.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AudioEngine.h; sourceTree = "<group>"; };
@@ -85,6 +91,11 @@
 			children = (
 				EBEC51061E9E2BA7003960D8 /* AppController.h */,
 				EBEC51071E9E2BA7003960D8 /* AppController.m */,
+				EBAC85DE1EBA587200A3CE4C /* WaveView2.h */,
+				EBAC85DF1EBA587200A3CE4C /* WaveView2.m */,
+				EBAC85DB1EBA583A00A3CE4C /* OutlineView.h */,
+				EBAC85DC1EBA583A00A3CE4C /* OutlineView.m */,
+				EBEC51141E9E2D06003960D8 /* MainMenu.xib */,
 				EBBB3C4D1EA3B35000017D02 /* WaveView.h */,
 				EBBB3C4E1EA3B35000017D02 /* WaveView.m */,
 				EB4137811EB62B2600A59A9B /* OverlayView.h */,
@@ -99,7 +110,6 @@
 				EBA1D0061EB073F400624988 /* NSColor+CoolEdit.m */,
 				EBEC51091E9E2BA7003960D8 /* Assets.xcassets */,
 				EBEC510E1E9E2BA7003960D8 /* Info.plist */,
-				EBEC51141E9E2D06003960D8 /* MainMenu.xib */,
 				EBEC51031E9E2BA7003960D8 /* Supporting Files */,
 			);
 			path = "Circle Edit";
@@ -183,6 +193,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				EBAC85E01EBA587200A3CE4C /* WaveView2.m in Sources */,
 				EBEC51081E9E2BA7003960D8 /* AppController.m in Sources */,
 				EBBB3C4F1EA3B35000017D02 /* WaveView.m in Sources */,
 				EB9D55B81E9FBD340059360F /* MainView.m in Sources */,
@@ -191,6 +202,7 @@
 				EB4137831EB62B2600A59A9B /* OverlayView.m in Sources */,
 				EBEC51021E9E2BA7003960D8 /* AppDelegate.m in Sources */,
 				EBBCBC0F1EB2321B0033BF2F /* AudioEngine.m in Sources */,
+				EBAC85DD1EBA583A00A3CE4C /* OutlineView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

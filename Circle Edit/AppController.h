@@ -8,6 +8,8 @@
 
 #import <Cocoa/Cocoa.h>
 #import "WaveView.h"
+#import "WaveView2.h"
+#import "OutlineView.h"
 #import "OverlayView.h"
 #import "AudioEngine.h"
 
@@ -17,6 +19,9 @@
     
     __weak IBOutlet WaveView *_waveView;
     __weak IBOutlet OverlayView *_overlayView;
+    __weak IBOutlet NSScrollView *_scrollView;
+    __weak IBOutlet WaveView2 *_waveView2;
+    __weak IBOutlet OutlineView *_outlineView;
     __weak IBOutlet NSButton *_btnStartStop;
     float _leftBuf[BUFFER_SIZE_SAMPLE];
     float _rightBuf[BUFFER_SIZE_SAMPLE];
@@ -28,13 +33,15 @@
     UInt32 _loopEndFrame;
     UInt32 _noLoopStartFrame;
     UInt32 _playingFrame;
-    Boolean _bSelected;
+    BOOL _bSelected;
+    
+    BOOL _scrollingByOutline;
     
     AudioEngine *ae;
     
 }
 
--(Boolean)loadFile:(NSString *)path;
+-(BOOL)loadFile:(NSString *)path;
 
 @end
 

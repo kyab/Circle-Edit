@@ -21,15 +21,15 @@
     AUGraph _graph;
     AudioUnit _outUnit;
     AudioUnit _converterUnit;
-    Boolean _bIsPlaying;
+    BOOL _bIsPlaying;
     id<AudioEngineDelegate> _delegate;
     
 }
 
 -(void)setRenderDelegate:(id<AudioEngineDelegate>)delegate;
--(Boolean)initialize;
--(Boolean)start;
--(Boolean)stop;
--(Boolean)isPlaying;
+-(BOOL)initialize;
+-(BOOL)start;
+-(BOOL)stop;
+-(BOOL)isPlaying;
 
 @end

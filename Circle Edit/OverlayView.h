@@ -10,10 +10,12 @@
 
 @interface OverlayView : NSView{
     double _playingFrameRate;
-    Boolean _isPlaying;
+    BOOL _isPlaying;
+    
+    NSRect _prevRect;
 }
 
 -(void)setPlayingFrameRate:(double) rate;
--(void)setIsPlaying:(Boolean) playing;
+-(void)setIsPlaying:(BOOL) playing;
 
 @end

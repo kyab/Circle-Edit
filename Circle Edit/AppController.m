@@ -21,17 +21,30 @@
 
 - (void)awakeFromNib{
     NSLog(@"AppController awaken");
-    [_waveView becomeFirstResponder];
+//    [_waveView becomeFirstResponder];
     
     [(MainView *)[self view] setDragDrop:self action:@selector(onDragDrop:) tryAction:@selector(onTryDragDrop:)];
     
-    [_waveView setSelectionUpdateNotify:self action:@selector(onSelectionUpdated:startFrom:end:noLoopPlayFrom:)];
+    //[_waveView setSelectionUpdateNotify:self action:@selector(onSelectionUpdated:startFrom:end:noLoopPlayFrom:)];
     
     _timer = [NSTimer scheduledTimerWithTimeInterval:0.05 target:self selector:@selector(onTimer:) userInfo:nil repeats:YES];
     
-    [_overlayView setFrame:_waveView.frame];
+    //[_overlayView setFrame:_waveView.frame];
     
-
+    
+    //receive scroll view change notification;
+    NSClipView *contentView = [_scrollView contentView];
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(didScroll:)
+                                                 name:NSViewBoundsDidChangeNotification
+                                               object:contentView];
+    
+    
+    [self syncOutline];
+    
+    [_waveView2 setDelegate:(id<WaveView2Delegate>)self];
+    [_outlineView setDelegate:(id<OutlineViewDelegate>)self];
+    
     ae = [[AudioEngine alloc] init];
     if ([ae initialize]){
         NSLog(@"AudioEngine initialized");
@@ -41,13 +54,52 @@
     
 }
 
+- (void)waveView2ZoomChanged{
+    [self syncOutline];
+    [_waveView2 resetPaths];
+    [_waveView2 setNeedsDisplay:YES];
+    
+}
+
+-(void)outlineViewScrolled{
+    _scrollingByOutline = YES;
+    
+    CGFloat xRateInOutline = [_outlineView currentX] / _outlineView.bounds.size.width;
+    NSPoint toPoint = NSMakePoint(xRateInOutline * _waveView2.bounds.size.width , 0);
+    [_waveView2 scrollPoint:toPoint];
+    
+    
+}
+
+- (void)syncOutline{
+
+    CGFloat currentXRate = _scrollView.contentView.bounds.origin.x
+        / _waveView2.bounds.size.width;         
+    CGFloat currentWidthRate = _scrollView.contentView.bounds.size.width
+        / _waveView2.bounds.size.width;
+    
+    [_outlineView setPosition:(CGFloat)currentXRate width:(double)currentWidthRate];
+    
+}
+
+
+- (void)didScroll:(NSNotification *)notification{
+    //NSClipView *contentView = [notification object];
+    //NSLog(@"notification : %f, %f",contentView.bounds.origin.x, contentView.bounds.size.width);
+    if (_scrollingByOutline){
+        _scrollingByOutline = NO;
+    }else{
+        [self syncOutline];
+    }
+}
+
 - (OSStatus) renderOutput:(AudioUnitRenderActionFlags *)ioActionFlags inTimeStamp:(const AudioTimeStamp *) inTimeStamp inBusNumber:(UInt32) inBusNumber inNumberFrames:(UInt32)inNumberFrames ioData:(AudioBufferList *)ioData{
     
     
     {
         static UInt32 count = 0;
         if ((count % 100) == 0){
-            NSLog(@"AppController outCallback inNumberFrames = %u", inNumberFrames);
+//            NSLog(@"AppController outCallback inNumberFrames = %u", inNumberFrames);
         }
         count++;
     }
@@ -98,7 +150,7 @@
         _playingFrame += firstCopy_num;
     }
     
-//    [self onTimer:nil];
+    [self onTimer:nil];
     
     return noErr;
 }
@@ -107,13 +159,14 @@
 {
     
     if ([ae isPlaying]){
-        [_overlayView setPlayingFrameRate:((double)(_playingFrame))/_buffer_len];
+        //[_overlayView setPlayingFrameRate:((double)(_playingFrame))/_buffer_len];
+        [_waveView2 setPlayingFrameRate:((double)(_playingFrame))/_buffer_len];
     }
     
 }
 
 
--(void)onSelectionUpdated:(Boolean)bSelected startFrom:(double)startRatio
+-(void)onSelectionUpdated:(BOOL)bSelected startFrom:(double)startRatio
                       end:(double)endRatio noLoopPlayFrom:(double)noLoopPlayFromRate{
 
     NSLog(@"bSelected:%u startFrom:%.3f, end:%.3f", bSelected, startRatio , endRatio);
@@ -124,11 +177,22 @@
 }
 
 
-- (Boolean)onDragDrop:(NSString *)path{
+- (void)waveView2SelectionUpdated:(BOOL)bSelected loopStartXRate:(double)startXRate
+                     loopEndXRate:(double)endXRate currentXRate:(double)currentXRate{
+    
+    _bSelected = bSelected;
+    _loopStartFrame = (UInt32)(_buffer_len * startXRate);
+    _loopEndFrame = (UInt32)(_buffer_len * endXRate);
+    _noLoopStartFrame = (UInt32)(_buffer_len * currentXRate);
+    
+}
+
+
+- (BOOL)onDragDrop:(NSString *)path{
     return [self loadFile:path];
 }
 
-- (Boolean)onTryDragDrop:(NSString *)path{
+- (BOOL)onTryDragDrop:(NSString *)path{
     return [self tryLoadFile:path];
 }
 
@@ -142,7 +206,7 @@
     if ([ae isPlaying]){
         [ae stop];
         [_btnStartStop setTitle:@"Play"];
-        [_overlayView setIsPlaying:NO];
+        [_waveView2 setIsPlaying:NO];
         
     }else{
         if (_bSelected){
@@ -150,14 +214,14 @@
         }else{
             _playingFrame = _noLoopStartFrame;
         }
-        [_overlayView setPlayingFrameRate:(double)(_playingFrame)/_buffer_len];
-        [_overlayView setIsPlaying:YES];
+        [_waveView2 setPlayingFrameRate:(double)(_playingFrame)/_buffer_len];
+        [_waveView2 setIsPlaying:YES];
         [ae start];
         [_btnStartStop setTitle:@"Stop"];
     }
 }
 
-- (Boolean)tryLoadFile:(NSString *)path {
+- (BOOL)tryLoadFile:(NSString *)path {
     OSStatus ret = noErr;
     ExtAudioFileRef extAudioFile;
     
@@ -185,7 +249,7 @@
 }
 
 
--(Boolean)loadFile:(NSString *)path{
+-(BOOL)loadFile:(NSString *)path{
     OSStatus ret = noErr;
     ExtAudioFileRef extAudioFile;
 
@@ -263,13 +327,9 @@
             break;
         }else{
             ret = ExtAudioFileTell(extAudioFile, &currentFrame);
-//            NSLog(@"loaded :%% %f", currentFrame/(float)totalFrame);
         }
     }
     free(bufferList);
-    
-    [_waveView setBuffer:_leftBuf right:_rightBuf len:_buffer_len];
-    
     
     NSLog(@"load file OK : %@", path);
     
@@ -280,7 +340,7 @@
     _playingFrame = 0;
     _bSelected = 0;
     
-    [_waveView setBuffer:_leftBuf right:_rightBuf len:_buffer_len];
+    [_waveView2 setBuffer:_leftBuf right:_rightBuf len:_buffer_len];
     
     
     return YES;
@@ -288,7 +348,7 @@
 
 
 
--(Boolean)saveFile:(NSURL *)fileURL{
+-(BOOL)saveFile:(NSURL *)fileURL{
     OSStatus ret = noErr;
     ExtAudioFileRef extAudioFile;
 
